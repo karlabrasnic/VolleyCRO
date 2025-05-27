@@ -1,94 +1,57 @@
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "igrac.h"
 
-Igrac* dodaj_igraca(Igrac* igraci, int* broj_igraca) {
-	Igrac novi;
-	printf("Unesi ID: ");
-	scanf("%d", &novi.id);
-	printf("Unesi ime: ");
-	scanf("%s", novi.ime);
-	printf("Unesi prezime: ");
-	scanf("%s", novi.prezime);
-	printf("Unesi broj dresa: ");
-	scanf("%d", &novi.broj);
-	printf("Unesi poziciju: ");
-	scanf("%s", novi.pozicija);
-	printf("Unesi godine: ");
-	scanf("%d", &novi.godine);
+void initIgraci(Igrac** igraci, int* broj_igraca) {
+	*igraci = NULL;
+	*broj_igraca = 0;
+}
 
-	Igrac* temp = realloc(igraci, (*broj_igraca + 1) * sizeof(Igrac));
-	if (temp == NULL) {
-		printf("Greska pri alokaciji memorije!\n");
-		return igraci;
-	}
-	igraci = temp;
-	igraci[*broj_igraca] = novi;
+int dodajIgraca(Igrac** igraci, int* broj_igraca, Igrac novi) {
+	Igrac* temp = realloc(*igraci, (*broj_igraca + 1) * sizeof(Igrac));
+	if (!temp) return 0;
+	*igraci = temp;
+	(*igraci)[*broj_igraca] = novi;
 	(*broj_igraca)++;
-
-	printf("Igrac dodan uspjesno.\n");
-	return igraci;
+	return 1;
 }
 
-void prikazi_igrace(const Igrac* igraci, int broj_igraca) {
-	printf("\n----- Popis igraca -----\n");
-	for (int i = 0; i < broj_igraca; i++) {
-		printf("ID: %d | %s %s | Broj: %d | Pozicija: %s | Godine: %d\n",
-			igraci[i].id, igraci[i].ime, igraci[i].prezime,
-			igraci[i].broj, igraci[i].pozicija, igraci[i].godine);
-	}
-	printf("-----------------------\n");
+void ispisiIgrace(Igrac* igraci, int broj) {
+	for (int i = 0; i < broj; i++) {
+		printf("ID: %d, Ime: %s, Prezime: %s, Godina rodjenja: %d, Pozicija: %s, Klub ID: %d\n",
+		igraci[i].id, igraci[i].ime, igraci[i].prezime, igraci[i].godina_rodenja,
+		igraci[i].pozicija, igraci[i].broj_kluba);
+}
 }
 
-int azuriraj_igraca(Igrac* igraci, int broj_igraca, int id) {
-	for (int i = 0; i < broj_igraca; i++) {
-		if (igraci[i].id == id) {
-			printf("Unesi novo ime: ");
-			scanf("%s", igraci[i].ime);
-			printf("Unesi novo prezime: ");
-			scanf("%s", igraci[i].prezime);
-			printf("Unesi novi broj dresa: ");
-			scanf("%d", &igraci[i].broj);
-			printf("Unesi novu poziciju: ");
-			scanf("%s", igraci[i].pozicija);
-			printf("Unesi nove godine: ");
-			scanf("%d", &igraci[i].godine);
-			printf("Igrac azuriran uspjesno.\n");
-			return 1;
-		}
-	}
-	printf("Igrac s ID-om %d nije pronaden.\n", id);
-	return 0;
+int pronadjiIgraca(Igrac* igraci, int broj, int id) {
+	for (int i = 0; i<broj; i++){
+		if (igraci[i].id == id) return i;
+    }
+    return -1;
 }
 
-int obrisi_igraca(Igrac** igraci, int* broj_igraca, int id) {
-	int i, postoji = 0;
-	for (i = 0; i < *broj_igraca; i++) {
-		if ((*igraci)[i].id == id) {
-			postoji = 1;
-			break;
-		}
-	}
-	if (!postoji) {
-		printf("Igrac s ID-om %d nije pronaden.\n", id);
-		return 0;
-	}
+int azurirajIgraca(Igrac* igraci, int broj, int id, Igrac noviPodaci) {
+	int idx = pronadjiIgraca(igraci, broj, id);
+	if (idx == -1) return 0;
+	igraci[idx] = noviPodaci;
+	return 1;
+}
 
-	for (int j = i; j < *broj_igraca - 1; j++) {
-		(*igraci)[j] = (*igraci)[j + 1];
+int obrisiIgraca(Igrac** igraci, int* broj, int id) {
+	int idx = pronadjiIgraca(*igraci, *broj, id);
+	if (idx == -1) return 0;
+	for (int i = idx; i < *broj - 1; i++) {
+		(*igraci)[i] = (*igraci)[i + 1];
 	}
-	Igrac* temp = realloc(*igraci, (*broj_igraca - 1) * sizeof(Igrac));
-	if (temp != NULL || *broj_igraca - 1 == 0) {
+	(*broj)--;
+	Igrac* temp = realloc(*igraci, (*broj) * sizeof(Igrac));
+	if (temp || *broj == 0) {
 		*igraci = temp;
-		(*broj_igraca)--;
-		printf("Igrac obrisan uspjesno.\n");
-		return 1;
 	}
-	else {
-		printf("Greska pri realokaciji memorije.\n");
-		return 0;
-	}
+	return 1;
 }
