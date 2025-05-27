@@ -1,17 +1,19 @@
 #ifndef IZBORNIK_H
 #define IZBORNIK_H
 
-typedef enum {
-	DODAJ_IGRACA = 1,
-	PRIKAZI_IGRACE,
+enum Opcija {
+	KRAJ = 0,
+	ISPISI_IGRACE = 1,
+	DODAJ_IGRACA,
 	AZURIRAJ_IGRACA,
 	OBRISI_IGRACA,
-	SPREMI_U_DATOTEKU,
-	UČITAJ_IZ_DATOTEKE,
-	IZLAZ
-} IzbornikOpcije;
+	ISPISI_KLUBOVE,
+	DODAJ_KLUB,
+	AZURIRAJ_KLUB,
+	OBRISI_KLUB,
+	SPREMI_PODATKE
+};
 
-void prikazi_izbornik(void);
-IzbornikOpcije odaberi_opciju(void);
+int prikaziIzbornik();
 
 #endif
