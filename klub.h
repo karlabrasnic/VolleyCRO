@@ -1,17 +1,23 @@
 #ifndef KLUB_H
 #define KLUB_H
 
+#define MAX_NAZIV 100
+#define MAX_GRAD 50
+
 typedef struct {
 	int id;
-	char naziv[50];
-	char grad[50];
+	char naziv[MAX_NAZIV];
+	char grad[MAX_GRAD];
+	int godine_osnivanja;
 	int broj_pobjeda;
 	int broj_poraza;
 } Klub;
 
-void prikaziKlubove(Klub* klubovi, int broj_klubova);
+void initKlubove(Klub** klubovi, int* broj_klubova);
 int dodajKlub(Klub** klubovi, int* broj_klubova, Klub novi);
-int azurirajKlub(Klub* klubovi, int broj_klubova, int id, Klub novi);
-int obrisiKlub(Klub* klubovi, int* broj_klubova, int id);
+void ispisiKlubove(Klub* klubovi, int broj);
+int pronadjiKlub(Klub* klubovi, int broj, int id);
+int azurirajKlub(Klub* klubovi, int broj, int id, Klub noviPodaci);
+int obrisiKlub(Klub** klubovi, int* broj, int id);
 
 #endif
