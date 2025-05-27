@@ -1,18 +1,23 @@
 #ifndef IGRAC_H
 #define IGRAC_H
 
+#define MAX_IME 50
+#define MAX_PREZIME 50
+
 typedef struct {
 	int id;
-	char ime[50];
-	char prezime[50];
-	int broj; 
-	char pozicija[20]; 
-	int godine;
+	char ime[MAX_IME];
+	char prezime[MAX_PREZIME];
+	int godina_rodenja;
+	char pozicija[20];
+	int broj_kluba; 
 } Igrac;
 
-Igrac* dodaj_igraca(Igrac* igraci, int* broj_igraca);
-void prikazi_igrace(const Igrac* igraci, int broj_igraca);
-int azuriraj_igraca(Igrac* igraci, int broj_igraca, int id);
-int obrisi_igraca(Igrac** igraci, int* broj_igraca, int id);
+void initIgraci(Igrac** igraci, int* broj_igraca);
+int dodajIgraca(Igrac** igraci, int* broj_igraca, Igrac novi);
+void ispisiIgrace(Igrac* igraci, int broj);
+int pronadjiIgraca(Igrac* igraci, int broj, int id);
+int azurirajIgraca(Igrac* igraci, int broj, int id, Igrac noviPodaci);
+int obrisiIgraca(Igrac** igraci, int* broj, int id);
 
 #endif
