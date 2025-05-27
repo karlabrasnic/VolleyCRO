@@ -1,10 +1,9 @@
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "klub.h"
-
 
 void initKlubove(Klub** klubovi, int* broj_klubova) {
 	*klubovi = NULL;
@@ -21,16 +20,16 @@ int dodajKlub(Klub** klubovi, int* broj_klubova, Klub novi) {
 }
 
 void ispisiKlubove(Klub* klubovi, int broj) {
-	for (int i = 0; i<broj; i++) {
-		printf("ID: %d, Naziv: %s, Grad: %s,  Pobjede: %d, Porazi: %d\n",
+	for (int i = 0; i<broj; i++) { 
+		printf("ID: %d, Naziv: %s, Grad: %s, Godine osnivanja: %d, Pobjede: %d, Porazi: %d\n",
 		klubovi[i].id, klubovi[i].naziv, klubovi[i].grad,
-		 klubovi[i].broj_pobjeda,
+		klubovi[i].godine_osnivanja, klubovi[i].broj_pobjeda,
 		klubovi[i].broj_poraza);
 }
 }
 
 int pronadjiKlub(Klub* klubovi, int broj, int id) {
-	for (int i = 0; i<broj; i++){
+	for (int i = 0; i<broj; i++) {
 		if (klubovi[i].id == id) return i;
     }
     return -1;
@@ -38,9 +37,9 @@ int pronadjiKlub(Klub* klubovi, int broj, int id) {
 
 int azurirajKlub(Klub* klubovi, int broj, int id, Klub noviPodaci) {
 	int idx = pronadjiKlub(klubovi, broj, id);
-		if (idx == -1) return 0;
-		klubovi[idx] = noviPodaci;
-		return 1;
+	if (idx == -1) return 0;
+	klubovi[idx] = noviPodaci;
+	return 1;
 }
 
 int obrisiKlub(Klub** klubovi, int* broj, int id) {
