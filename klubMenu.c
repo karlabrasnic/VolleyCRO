@@ -5,7 +5,7 @@
 #include "klubMenu.h"
 #include "klub.h"
 
-void unosKlubaMenu(Klub** klubovi, int* brojKlubova) {
+void unos_KlubaMenu(Klub** klubovi, int* brojKlubova) {
     Klub novi;
     printf("Unesite ID kluba: ");
     if (scanf("%d", &novi.id) != 1) {
@@ -57,7 +57,7 @@ void unosKlubaMenu(Klub** klubovi, int* brojKlubova) {
     }
 }
 
-void azurirajKlubMenu(Klub* klubovi, int brojKlubova) {
+void azuriraj_KlubMenu(Klub* klubovi, int brojKlubova) {
     int id;
     printf("Unesite ID kluba za azuriranje: ");
     if (scanf("%d", &id) != 1) {
@@ -117,7 +117,7 @@ void azurirajKlubMenu(Klub* klubovi, int brojKlubova) {
     }
 }
 
-void obrisiKlubMenu(Klub** klubovi, int* brojKlubova) {
+void obrisi_KlubMenu(Klub** klubovi, int* brojKlubova) {
     int id;
     printf("Unesite ID kluba za brisanje: ");
     if (scanf("%d", &id) != 1) {
