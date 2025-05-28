@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "izbornik.h"
 
-int prikaziIzbornik() {
+int prikazi_izbornik() {
     int izbor;
     printf("\n--- VolleyCRO Izbornik ---\n");
     printf("1. Ispisi igrace\n");
