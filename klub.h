@@ -5,19 +5,19 @@
 #define MAX_GRAD 50
 
 typedef struct {
-	int id;
-	char naziv[MAX_NAZIV];
-	char grad[MAX_GRAD];
-	int godine_osnivanja;
-	int broj_pobjeda;
-	int broj_poraza;
+    int id;
+    char naziv[MAX_NAZIV];
+    char grad[MAX_GRAD];
+    int godine_osnivanja;
+    int broj_pobjeda;
+    int broj_poraza;
 } Klub;
 
-void initKlubove(Klub** klubovi, int* broj_klubova);
-int dodajKlub(Klub** klubovi, int* broj_klubova, Klub novi);
-void ispisiKlubove(Klub* klubovi, int broj);
-int pronadjiKlub(Klub* klubovi, int broj, int id);
-int azurirajKlub(Klub* klubovi, int broj, int id, Klub noviPodaci);
-int obrisiKlub(Klub** klubovi, int* broj, int id);
 
-#endif
+void init_klubove(Klub** klubovi, int* broj_klubova);
+int dodaj_klub(Klub** klubovi, int* broj_klubova, Klub novi);
+void ispisi_klubove(Klub* klubovi, int broj);
+int pronadji_klub(Klub* klubovi, int broj, int id);
+int azuriraj_klub(Klub* klubovi, int broj, int id, Klub novi_podaci);
+int obrisi_klub(Klub** klubovi, int* broj, int id);
+#endif 
