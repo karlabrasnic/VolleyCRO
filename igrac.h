@@ -5,19 +5,20 @@
 #define MAX_PREZIME 50
 
 typedef struct {
-	int id;
-	char ime[MAX_IME];
-	char prezime[MAX_PREZIME];
-	int godina_rodenja;
-	char pozicija[20];
-	int broj_kluba; 
+    int id;
+    char ime[MAX_IME];
+    char prezime[MAX_PREZIME];
+    int godina_rodenja;
+    char pozicija[20];
+    int broj_kluba;
 } Igrac;
 
-void initIgraci(Igrac** igraci, int* broj_igraca);
-int dodajIgraca(Igrac** igraci, int* broj_igraca, Igrac novi);
-void ispisiIgrace(Igrac* igraci, int broj);
-int pronadjiIgraca(Igrac* igraci, int broj, int id);
-int azurirajIgraca(Igrac* igraci, int broj, int id, Igrac noviPodaci);
-int obrisiIgraca(Igrac** igraci, int* broj, int id);
+
+void init_igraci(Igrac** igraci, int* broj_igraca);
+int dodaj_igraca(Igrac** igraci, int* broj_igraca, Igrac novi);
+void ispisi_igrace(Igrac* igraci, int broj);
+int pronadji_igraca(Igrac* igraci, int broj, int id);
+int azuriraj_igraca(Igrac* igraci, int broj, int id, Igrac novi_podaci);
+int obrisi_igraca(Igrac** igraci, int* broj, int id);
 
 #endif
