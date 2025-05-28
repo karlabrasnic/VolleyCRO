@@ -3,8 +3,8 @@
 
 #include "igrac.h"
 
-void unosIgracaMenu(Igrac** igraci, int* brojIgraca);
-void azurirajIgracaMenu(Igrac* igraci, int brojIgraca);
-void obrisiIgracaMenu(Igrac** igraci, int* brojIgraca);
+void unos_igracaMenu(Igrac** igraci, int* brojIgraca);
+void azuriraj_igracaMenu(Igrac* igraci, int brojIgraca);
+void obrisi_igracaMenu(Igrac** igraci, int* brojIgraca);
 
 #endif
