@@ -1,4 +1,3 @@
-
 #ifndef DATOTEKA_H
 #define DATOTEKA_H
 
