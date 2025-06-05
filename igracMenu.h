@@ -1,10 +1,10 @@
-#ifndef IGRACMENU_H
-#define IGRACMENU_H
+#ifndef IGRAC_MENU_H
+#define IGRAC_MENU_H
 
 #include "igrac.h"
 
-void unos_igracaMenu(Igrac** igraci, int* brojIgraca);
-void azuriraj_igracaMenu(Igrac* igraci, int brojIgraca);
-void obrisi_igracaMenu(Igrac** igraci, int* brojIgraca);
+void unos_igraca_menu(Igrac** igraci, int* broj_igraca);
+void azuriraj_igraca_menu(Igrac** igraci, int broj_igraca);
+void obrisi_igraca_menu(Igrac** igraci, int* broj_igraca);
 
 #endif
