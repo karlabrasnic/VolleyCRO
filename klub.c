@@ -3,135 +3,142 @@
 #include <string.h>
 #include "klub.h"
 
-int ucitajKlubove(const char* nazivDatoteke, Klub** klubovi, int* brojKlubova) {
-    FILE* datoteka = fopen(nazivDatoteke, "r");
-    if (!datoteka) {
-        perror("Greška pri otvaranju datoteke za čitanje");
-        return 0;
+void ucitajKluboveIzDatoteke(Klub **klubovi, int *brojKlubova) {
+    FILE *datoteka = fopen("klubovi.txt", "r");
+    if (datoteka == NULL) {
+        *brojKlubova = 0;
+        *klubovi = NULL;
+        return;
     }
 
+    Klub privremeni;
     *brojKlubova = 0;
     *klubovi = NULL;
-    Klub privremeni;
 
-    while (fscanf(datoteka, "%d %[^\n] %[^\n] %d\n",
-        &privremeni.id, privremeni.naziv, privremeni.grad, &privremeni.brojTitula) == 4) {
-        
-        Klub* noviNiz = realloc(*klubovi, (*brojKlubova + 1) * sizeof(Klub));
-        if (!noviNiz) {
-            perror("Greška pri alokaciji memorije");
+    while (fscanf(datoteka, " %[^\t]\t%[^\t]\t%d\n", privremeni.naziv, privremeni.grad, &privremeni.brojTitula) == 3) {
+        Klub *novi = realloc(*klubovi, (*brojKlubova + 1) * sizeof(Klub));
+        if (novi == NULL) {
+            printf("Greska pri alokaciji memorije!\n");
             fclose(datoteka);
-            return 0;
+            return;
         }
-        *klubovi = noviNiz;
+        *klubovi = novi;
         (*klubovi)[*brojKlubova] = privremeni;
         (*brojKlubova)++;
     }
 
     fclose(datoteka);
-    return 1;
 }
 
-int spremiKlubove(const char* nazivDatoteke, Klub* klubovi, int brojKlubova) {
-    FILE* datoteka = fopen(nazivDatoteke, "w");
-    if (!datoteka) {
-        perror("Greška pri otvaranju datoteke za pisanje");
-        return 0;
+void spremiKluboveUDatoteku(Klub *klubovi, int brojKlubova) {
+    FILE *datoteka = fopen("klubovi.txt", "w");
+    if (datoteka == NULL) {
+        printf("Greska pri otvaranju datoteke za pisanje.\n");
+        return;
     }
 
     for (int i = 0; i < brojKlubova; i++) {
-        fprintf(datoteka, "%d %s %s %d\n",
-            klubovi[i].id,
-            klubovi[i].naziv,
-            klubovi[i].grad,
-            klubovi[i].brojTitula);
+        fprintf(datoteka, "%s\t%s\t%d\n", klubovi[i].naziv, klubovi[i].grad, klubovi[i].brojTitula);
     }
 
     fclose(datoteka);
-    return 1;
 }
 
-int dodajKlub(Klub** klubovi, int* brojKlubova) {
+void dodajKlub(Klub **klubovi, int *brojKlubova) {
     Klub novi;
-
-    printf("Unesite ID kluba: ");
-    if (scanf("%d", &novi.id) != 1) {
-        printf("Neispravan unos ID-a.\n");
-        return 0;
-    }
-    getchar(); // očisti novi red
-
     printf("Unesite naziv kluba: ");
-    if (!fgets(novi.naziv, MAX_NAZIV, stdin)) return 0;
-    novi.naziv[strcspn(novi.naziv, "\n")] = '\0';
-
+    if (scanf(" %[^\n]", novi.naziv) != 1) return;
     printf("Unesite grad: ");
-    if (!fgets(novi.grad, MAX_GRAD, stdin)) return 0;
-    novi.grad[strcspn(novi.grad, "\n")] = '\0';
+    if (scanf(" %[^\n]", novi.grad) != 1) return;
+    printf("Unesite broj osvojenih titula: ");
+    if (scanf("%d", &novi.brojTitula) != 1) return;
 
-    printf("Unesite broj titula: ");
-    if (scanf("%d", &novi.brojTitula) != 1) {
-        printf("Neispravan unos broja titula.\n");
-        return 0;
-    }
-
-    Klub* noviNiz = realloc(*klubovi, (*brojKlubova + 1) * sizeof(Klub));
-    if (!noviNiz) {
-        perror("Greška pri alokaciji memorije");
-        return 0;
+    Klub *noviNiz = realloc(*klubovi, (*brojKlubova + 1) * sizeof(Klub));
+    if (noviNiz == NULL) {
+        printf("Greska pri alokaciji memorije!\n");
+        return;
     }
 
     *klubovi = noviNiz;
     (*klubovi)[*brojKlubova] = novi;
     (*brojKlubova)++;
 
-    printf("Klub uspješno dodan!\n");
-    return 1;
+    spremiKluboveUDatoteku(*klubovi, *brojKlubova);
+    printf("Klub uspjesno dodan!\n");
 }
 
-void ispisiKlubove(const Klub* klubovi, int brojKlubova) {
-    printf("\n--- Popis klubova ---\n");
+void prikaziKlubove(Klub *klubovi, int brojKlubova) {
+    if (brojKlubova == 0) {
+        printf("Nema unesenih klubova.\n");
+        return;
+    }
+
     for (int i = 0; i < brojKlubova; i++) {
-        printf("ID: %d | Naziv: %s | Grad: %s | Titule: %d\n",
-            klubovi[i].id,
-            klubovi[i].naziv,
-            klubovi[i].grad,
-            klubovi[i].brojTitula);
+        printf("%d. %s (%s) - %d titula\n", i + 1, klubovi[i].naziv, klubovi[i].grad, klubovi[i].brojTitula);
     }
 }
 
-int obrisiKlub(Klub** klubovi, int* brojKlubova, int trazeniID) {
-    int indeks = -1;
-    for (int i = 0; i < *brojKlubova; i++) {
-        if ((*klubovi)[i].id == trazeniID) {
-            indeks = i;
-            break;
-        }
+void azurirajKlub(Klub *klubovi, int brojKlubova) {
+    if (brojKlubova == 0) {
+        printf("Nema klubova za azuriranje.\n");
+        return;
     }
 
-    if (indeks == -1) {
-        printf("Klub s ID-om %d nije pronađen.\n", trazeniID);
-        return 0;
+    prikaziKlubove(klubovi, brojKlubova);
+
+    int indeks;
+    printf("Unesite redni broj kluba za azuriranje: ");
+    if (scanf("%d", &indeks) != 1 || indeks < 1 || indeks > brojKlubova) {
+        printf("Neispravan unos.\n");
+        return;
     }
+
+    indeks--;
+
+    printf("Novi naziv kluba: ");
+    if (scanf(" %[^\n]", klubovi[indeks].naziv) != 1) return;
+    printf("Novi grad: ");
+    if (scanf(" %[^\n]", klubovi[indeks].grad) != 1) return;
+    printf("Novi broj titula: ");
+    if (scanf("%d", &klubovi[indeks].brojTitula) != 1) return;
+
+    spremiKluboveUDatoteku(klubovi, brojKlubova);
+    printf("Klub azuriran!\n");
+}
+
+void izbrisiKlub(Klub **klubovi, int *brojKlubova) {
+    if (*brojKlubova == 0) {
+        printf("Nema klubova za brisanje.\n");
+        return;
+    }
+
+    prikaziKlubove(*klubovi, *brojKlubova);
+
+    int indeks;
+    printf("Unesite redni broj kluba za brisanje: ");
+    if (scanf("%d", &indeks) != 1 || indeks < 1 || indeks > *brojKlubova) {
+        printf("Neispravan unos.\n");
+        return;
+    }
+
+    indeks--;
 
     for (int i = indeks; i < *brojKlubova - 1; i++) {
         (*klubovi)[i] = (*klubovi)[i + 1];
     }
 
-    Klub* noviNiz = realloc(*klubovi, (*brojKlubova - 1) * sizeof(Klub));
-    if (!noviNiz && *brojKlubova - 1 > 0) {
-        perror("Greška pri alokaciji memorije");
-        return 0;
+    Klub *noviNiz = realloc(*klubovi, (*brojKlubova - 1) * sizeof(Klub));
+    if (noviNiz != NULL || *brojKlubova - 1 == 0) {
+        *klubovi = noviNiz;
     }
 
-    *klubovi = noviNiz;
     (*brojKlubova)--;
 
-    printf("Klub uspješno obrisan.\n");
-    return 1;
+    spremiKluboveUDatoteku(*klubovi, *brojKlubova);
+    printf("Klub izbrisan.\n");
 }
 
-void sortirajKlubovePoNazivu(Klub* klubovi, int brojKlubova) {
+void sortirajKlubove(Klub *klubovi, int brojKlubova) {
     for (int i = 0; i < brojKlubova - 1; i++) {
         for (int j = i + 1; j < brojKlubova; j++) {
             if (strcmp(klubovi[i].naziv, klubovi[j].naziv) > 0) {
@@ -141,12 +148,6 @@ void sortirajKlubovePoNazivu(Klub* klubovi, int brojKlubova) {
             }
         }
     }
-}
 
-Klub* pretraziKlubPoIDu(Klub* klubovi, int brojKlubova, int trazeniID) {
-    if (brojKlubova == 0) return NULL;
-    if (klubovi[brojKlubova - 1].id == trazeniID) {
-        return &klubovi[brojKlubova - 1];
-    }
-    return pretraziKlubPoIDu(klubovi, brojKlubova - 1, trazeniID);
+    printf("Klubovi sortirani po nazivu.\n");
 }
