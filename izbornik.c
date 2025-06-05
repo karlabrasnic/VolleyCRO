@@ -1,9 +1,9 @@
-#define _CRT_SECURE_NO_WARNINGS 
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include "izbornik.h"
 
-int prikazi_izbornik() {
+int prikazi_izbornik(void) {
     int izbor;
     printf("\n--- VolleyCRO Izbornik ---\n");
     printf("1. Ispisi igrace\n");
@@ -15,12 +15,14 @@ int prikazi_izbornik() {
     printf("7. Azuriraj klub\n");
     printf("8. Obrisi klub\n");
     printf("9. Spremi podatke\n");
-    printf("10. Izlaz\n");
+    printf("0. Izlaz\n");
     printf("Izaberite opciju: ");
+
     if (scanf("%d", &izbor) != 1) {
         printf("Neispravan unos!\n");
         izbor = -1;
-        while (getchar() != '\n'); 
+        while (getchar() != '\n');  
     }
+
     return izbor;
 }
