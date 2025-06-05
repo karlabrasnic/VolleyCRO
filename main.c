@@ -3,11 +3,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "igracMenu.h"
-#include "klubMenu.h"   
+#include "klubMenu.h"
 #include "datoteka.h"
+#include "igracMenu.h"
 #include "izbornik.h"
 
-int main() {
+
+static inline void sigurnoOslobodiMemoriju(void** ptr) {
+    if (ptr != NULL && *ptr != NULL) {
+        free(*ptr);
+        *ptr = NULL;
+    }
+}
+
+int main(void) {
     printf("\n===========================================\n");
     printf("   --- Dobrodosli u VolleyCRO aplikaciju! ---\n");
     printf("===========================================\n\n");
@@ -21,54 +30,56 @@ int main() {
     if (!ucitaj_igrace("igraci.txt", &igraci, &brojIgraca)) {
         printf("Neuspjelo ucitavanje igraca.\n");
     }
+
     if (!ucitaj_klubove("klubovi.txt", &klubovi, &brojKlubova)) {
         printf("Neuspjelo ucitavanje klubova.\n");
     }
 
-    int izbor;
+    int izabranaOpcija = 0;
 
     do {
-        izbor = prikaziIzbornik();
-        switch (izbor) {
+        izabranaOpcija = prikazi_izbornik();
+
+        switch (izabranaOpcija) {
         case ISPISI_IGRACE:
-            ispisiIgrace(igraci, brojIgraca);
+            ispisi_igrace(igraci, brojIgraca);
             break;
 
         case DODAJ_IGRACA:
-            unosIgracaMenu(&igraci, &brojIgraca);
+            unos_igraca_menu(&igraci, &brojIgraca);
             break;
 
         case AZURIRAJ_IGRACA:
-            azurirajIgracaMenu(igraci, brojIgraca);
+            azuriraj_igraca_menu(igraci, brojIgraca);
             break;
 
         case OBRISI_IGRACA:
-            obrisiIgracaMenu(&igraci, &brojIgraca);
+            obrisi_igraca_menu(&igraci, &brojIgraca);
             break;
 
         case ISPISI_KLUBOVE:
-            ispisiKlubove(klubovi, brojKlubova);
+            ispisi_klubove(klubovi, brojKlubova);
             break;
 
         case DODAJ_KLUB:
-            unosKlubaMenu(&klubovi, &brojKlubova);
+            unos_kluba_menu(&klubovi, &brojKlubova);
             break;
 
         case AZURIRAJ_KLUB:
-            azurirajKlubMenu(klubovi, brojKlubova);
+            azuriraj_klub_menu(klubovi, brojKlubova);
             break;
 
         case OBRISI_KLUB:
-            obrisiKlubMenu(&klubovi, &brojKlubova);
+            obrisi_klub_menu(&klubovi, &brojKlubova);
             break;
 
         case SPREMI_PODATKE:
             if (spremi_igrace("igraci.txt", igraci, brojIgraca) &&
                 spremi_klubove("klubovi.txt", klubovi, brojKlubova)) {
-                printf("Podaci spremljeni.\n");
+                printf("Podaci su uspješno spremljeni.\n");
             }
             else {
-                printf("Greska pri spremanju podataka.\n");
+                printf("Greška pri spremanju podataka.\n");
             }
             break;
 
@@ -80,10 +91,10 @@ int main() {
             printf("Nepoznata opcija.\n");
             break;
         }
-    } while (izbor != KRAJ);
+    } while (izabranaOpcija != KRAJ);
 
-    free(igraci);
-    free(klubovi);
+    sigurnoOslobodiMemoriju((void**)&igraci);
+    sigurnoOslobodiMemoriju((void**)&klubovi);
 
     return 0;
-
+}
