@@ -1,140 +1,49 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "klubMenu.h"
 #include "klub.h"
 
-void unos_kluba_menu(Klub** klubovi, int* broj_klubova) {
-    Klub novi;
+void klubIzbornik(Klub **klubovi, int *brojKlubova) {
+    int izbor;
+    do {
+        printf("\n----- IZBORNIK KLUBOVA -----\n");
+        printf("1. Dodaj novi klub\n");
+        printf("2. Prikazi sve klubove\n");
+        printf("3. Azuriraj klub\n");
+        printf("4. Izbrisi klub\n");
+        printf("5. Sortiraj klubove po nazivu\n");
+        printf("0. Povratak u glavni izbornik\n");
+        printf("Odabir: ");
 
-    printf("Unesite ID kluba: ");
-    if (scanf("%d", &novi.id) != 1) {
-        printf("Neispravan unos ID-a.\n");
-        while (getchar() != '\n');
-        return;
-    }
+        if (scanf(" %d", &izbor) != 1) {
+            printf("Greska pri unosu!\n");
+            while (getchar() != '\n');
+            continue;
+        }
 
-    printf("Unesite naziv kluba: ");
-    if (scanf(" %99s", novi.naziv) != 1) {
-        printf("Neispravan unos naziva.\n");
-        while (getchar() != '\n');
-        return;
-    }
+        switch (izbor) {
+            case 1:
+                dodajKlub(klubovi, brojKlubova);
+                break;
+            case 2:
+                prikaziKlubove(*klubovi, *brojKlubova);
+                break;
+            case 3:
+                azurirajKlub(*klubovi, *brojKlubova);
+                break;
+            case 4:
+                izbrisiKlub(klubovi, brojKlubova);
+                break;
+            case 5:
+                sortirajKlubove(*klubovi, *brojKlubova);
+                printf("Klubovi su sortirani po nazivu.\n");
+                break;
+            case 0:
+                printf("Povratak u glavni izbornik...\n");
+                break;
+            default:
+                printf("Nepostojeca opcija. Pokusajte ponovo.\n");
+        }
 
-    printf("Unesite grad: ");
-    if (scanf(" %49s", novi.grad) != 1) {
-        printf("Neispravan unos grada.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    printf("Unesite godine osnivanja: ");
-    if (scanf("%d", &novi.godine_osnivanja) != 1) {
-        printf("Neispravan unos godine osnivanja.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    printf("Unesite broj pobjeda: ");
-    if (scanf("%d", &novi.broj_pobjeda) != 1) {
-        printf("Neispravan unos broja pobjeda.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    printf("Unesite broj poraza: ");
-    if (scanf("%d", &novi.broj_poraza) != 1) {
-        printf("Neispravan unos broja poraza.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    if (dodaj_klub(klubovi, broj_klubova, novi)) {
-        printf("Klub uspješno dodan.\n");
-    }
-    else {
-        printf("Greška pri dodavanju kluba.\n");
-    }
-}
-
-void azuriraj_klub_menu(Klub* klubovi, int broj_klubova) {
-    int id;
-
-    printf("Unesite ID kluba za ažuriranje: ");
-    if (scanf("%d", &id) != 1) {
-        printf("Neispravan unos ID-a.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    int indeks = pronadji_klub(klubovi, broj_klubova, id);
-    if (indeks == -1) {
-        printf("Klub s navedenim ID-em ne postoji.\n");
-        return;
-    }
-
-    Klub novi;
-    novi.id = id;
-
-    printf("Unesite novi naziv kluba: ");
-    if (scanf(" %99s", novi.naziv) != 1) {
-        printf("Neispravan unos naziva.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    printf("Unesite novi grad: ");
-    if (scanf(" %49s", novi.grad) != 1) {
-        printf("Neispravan unos grada.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    printf("Unesite novu godinu osnivanja: ");
-    if (scanf("%d", &novi.godine_osnivanja) != 1) {
-        printf("Neispravan unos godine osnivanja.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    printf("Unesite novi broj pobjeda: ");
-    if (scanf("%d", &novi.broj_pobjeda) != 1) {
-        printf("Neispravan unos broja pobjeda.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    printf("Unesite novi broj poraza: ");
-    if (scanf("%d", &novi.broj_poraza) != 1) {
-        printf("Neispravan unos broja poraza.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    if (azuriraj_klub(klubovi, broj_klubova, id, novi)) {
-        printf("Klub uspješno ažuriran.\n");
-    }
-    else {
-        printf("Greška pri ažuriranju kluba.\n");
-    }
-}
-
-void obrisi_klub_menu(Klub** klubovi, int* broj_klubova) {
-    int id;
-
-    printf("Unesite ID kluba za brisanje: ");
-    if (scanf("%d", &id) != 1) {
-        printf("Neispravan unos ID-a.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    if (obrisi_klub(klubovi, broj_klubova, id)) {
-        printf("Klub uspješno obrisan.\n");
-    }
-    else {
-        printf("Klub nije pronađen.\n");
-    }
+    } while (izbor != 0);
 }
