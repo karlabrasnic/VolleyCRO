@@ -11,7 +11,7 @@ void unos_igraca_menu(Igrac** igraci, int* brojIgraca) {
     printf("Unesite ID igraca: ");
     if (scanf("%d", &novi.id) != 1) {
         printf("Neispravan unos ID-a.\n");
-        while (getchar() != '\n');  // čisti ulazni buffer
+        while (getchar() != '\n');  
         return;
     }
 
