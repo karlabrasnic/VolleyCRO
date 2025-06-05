@@ -32,13 +32,13 @@ int ucitaj_igrace(const char* filename, Igrac** igraci, int* broj) {
 int spremi_igrace(const char* filename, Igrac* igraci, int broj) {
 	FILE* f = fopen("C:\\Users\\Fujitsu\\source\\repos\\volleyCRO2\\volleyCRO2\\x64\\Debug\\igraci.txt", "w");
 	if (!f) return 0;
-	for (int i = 0; i<broj; i++) {
+	for (int i = 0; i < broj; i++) {
 		fprintf(f, "%d %s %s %d %s %d\n",
-		igraci[i].id, igraci[i].ime, igraci[i].prezime,
-		igraci[i].godina_rodenja, igraci[i].pozicija, igraci[i].broj_kluba);
-    }
-    fclose(f);
-    return 1;
+			igraci[i].id, igraci[i].ime, igraci[i].prezime,
+			igraci[i].godina_rodenja, igraci[i].pozicija, igraci[i].broj_kluba);
+	}
+	fclose(f);
+	return 1;
 }
 
 int ucitaj_klubove(const char* filename, Klub** klubovi, int* broj) {
@@ -68,11 +68,11 @@ int ucitaj_klubove(const char* filename, Klub** klubovi, int* broj) {
 int spremi_klubove(const char* filename, Klub* klubovi, int broj) {
 	FILE* f = fopen("C:\\Users\\Fujitsu\\source\\repos\\volleyCRO2\\volleyCRO2\\x64\\Debug\\klubovi.txt", "w");
 	if (!f) return 0;
-	for (int i = 0; i<broj; i++) { 
+	for (int i = 0; i < broj; i++) {
 		fprintf(f, "%d %s %s %d %d %d\n",
-		klubovi[i].id, klubovi[i].naziv, klubovi[i].grad,
-		klubovi[i].godine_osnivanja, klubovi[i].broj_pobjeda, klubovi[i].broj_poraza);
-    }
-    fclose(f);
-    return 1;
+			klubovi[i].id, klubovi[i].naziv, klubovi[i].grad,
+			klubovi[i].godine_osnivanja, klubovi[i].broj_pobjeda, klubovi[i].broj_poraza);
+	}
+	fclose(f);
+	return 1;
 }
