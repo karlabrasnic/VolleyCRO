@@ -3,9 +3,8 @@
 
 #include "klub.h"
 
-
-void unos_KlubaMenu(Klub** klubovi, int* brojKlubova);
-void azuriraj_KlubMenu(Klub* klubovi, int brojKlubova);
-void obrisi_KlubMenu(Klub** klubovi, int* brojKlubova);
+void unos_kluba_menu(Klub** klubovi, int* broj_klubova);
+void azuriraj_klub_menu(Klub* klubovi, int broj_klubova);
+void obrisi_klub_menu(Klub** klubovi, int* broj_klubova);
 
 #endif
