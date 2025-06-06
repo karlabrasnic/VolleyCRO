@@ -5,14 +5,12 @@
 #include <string.h>
 #include "igrac.h"
 
-
 void init_igraci(Igrac** igraci, int* broj_igraca) {
     if (igraci != NULL && broj_igraca != NULL) {
         *igraci = NULL;
         *broj_igraca = 0;
     }
 }
-
 
 int dodaj_igraca(Igrac** igraci, int* broj_igraca, Igrac novi) {
     if (igraci == NULL || broj_igraca == NULL) return 0;
@@ -25,7 +23,6 @@ int dodaj_igraca(Igrac** igraci, int* broj_igraca, Igrac novi) {
     (*broj_igraca)++;
     return 1;
 }
-
 
 void ispisi_igrace(const Igrac* igraci, int broj) {
     if (igraci == NULL || broj <= 0) {
@@ -40,7 +37,6 @@ void ispisi_igrace(const Igrac* igraci, int broj) {
     }
 }
 
-
 int pronadji_igraca(const Igrac* igraci, int broj, int id) {
     if (igraci == NULL || broj <= 0) return -1;
 
@@ -51,7 +47,6 @@ int pronadji_igraca(const Igrac* igraci, int broj, int id) {
     return -1;
 }
 
-
 int azuriraj_igraca(Igrac* igraci, int broj, int id, Igrac novi_podaci) {
     int idx = pronadji_igraca(igraci, broj, id);
     if (idx == -1) return 0;
@@ -59,7 +54,6 @@ int azuriraj_igraca(Igrac* igraci, int broj, int id, Igrac novi_podaci) {
     igraci[idx] = novi_podaci;
     return 1;
 }
-
 
 int obrisi_igraca(Igrac** igraci, int* broj, int id) {
     if (igraci == NULL || *igraci == NULL || broj == NULL || *broj <= 0) return 0;
@@ -74,7 +68,7 @@ int obrisi_igraca(Igrac** igraci, int* broj, int id) {
     Igrac* temp = NULL;
     if (*broj - 1 > 0) {
         temp = realloc(*igraci, (*broj - 1) * sizeof(Igrac));
-        if (temp == NULL) return 0;  
+        if (temp == NULL) return 0;
     }
     else {
         free(*igraci);
@@ -82,6 +76,5 @@ int obrisi_igraca(Igrac** igraci, int* broj, int id) {
 
     *igraci = temp;
     (*broj)--;
-
     return 1;
 }
