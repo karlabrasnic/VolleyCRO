@@ -2,10 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-
+#include "igrac.h"
 #include "igracMenu.h"
+#include "klub.h"
 #include "klubMenu.h"
 #include "datoteka.h"
 #include "izbornik.h"
@@ -36,12 +35,11 @@ int main(void) {
         perror("Neuspjelo učitavanje klubova");
     }
 
-    int izabrana_opcija = 0;
-
+    int opcija;
     do {
-        izabrana_opcija = prikazi_izbornik();
+        opcija = prikazi_izbornik();
 
-        switch (izabrana_opcija) {
+        switch (opcija) {
             case ISPISI_IGRACE:
                 ispisi_igrace(igraci, broj_igraca);
                 break;
@@ -84,20 +82,18 @@ int main(void) {
                 break;
 
             case KRAJ:
-                printf("Izlaz iz programa.\nVidimo se!\n");
+                printf("Izlaz iz programa. Vidimo se!\n");
                 break;
 
             default:
                 fprintf(stderr, "Nepoznata opcija.\n");
                 break;
         }
-
-    } while (izabrana_opcija != KRAJ);
+    } while (opcija != KRAJ);
 
     sigurno_oslobodi_memoriju((void**)&igraci);
     sigurno_oslobodi_memoriju((void**)&klubovi);
 
     return 0;
 }
-
 
