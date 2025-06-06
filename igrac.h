@@ -13,7 +13,6 @@ typedef struct {
     int broj_kluba;
 } Igrac;
 
-
 void init_igraci(Igrac** igraci, int* broj_igraca);
 int dodaj_igraca(Igrac** igraci, int* broj_igraca, Igrac novi);
 void ispisi_igrace(Igrac* igraci, int broj);
@@ -22,3 +21,4 @@ int azuriraj_igraca(Igrac* igraci, int broj, int id, Igrac novi_podaci);
 int obrisi_igraca(Igrac** igraci, int* broj, int id);
 
 #endif
+
