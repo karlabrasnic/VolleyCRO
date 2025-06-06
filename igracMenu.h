@@ -1,12 +1,12 @@
-#ifndef IGRACMENU_H
-#define IGRACMENU_H
+#ifndef IGRAC_MENU_H
+#define IGRAC_MENU_H
 
 #include "igrac.h"
 
-void unos_igraca_menu(Igrac** igraci, int* broj_igraca);
-void azuriraj_igraca_menu(Igrac* igraci, int broj_igraca);
-void obrisi_igraca_menu(Igrac** igraci, int* broj_igraca);
+void prikazi_izbornik_igraca(void);
+void upravljanje_igracima(Igrac** igraci, int* broj, const struct Klub* klubovi, int broj_klubova);
 
 #endif
+
 
 
