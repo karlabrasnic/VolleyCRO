@@ -2,14 +2,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+
 #include "igracMenu.h"
 #include "klubMenu.h"
 #include "datoteka.h"
-#include "igracMenu.h"
 #include "izbornik.h"
 
-
-static inline void sigurnoOslobodiMemoriju(void** ptr) {
+static inline void SigurnoOslobodiMemoriju(void** ptr) {
     if (ptr != NULL && *ptr != NULL) {
         free(*ptr);
         *ptr = NULL;
@@ -18,83 +19,84 @@ static inline void sigurnoOslobodiMemoriju(void** ptr) {
 
 int main(void) {
     printf("\n===========================================\n");
-    printf("   --- Dobrodosli u VolleyCRO aplikaciju! ---\n");
+    printf("   --- Dobrodošli u VolleyCRO aplikaciju! ---\n");
     printf("===========================================\n\n");
 
     Igrac* igraci = NULL;
-    int brojIgraca = 0;
+    int broj_igraca = 0;
 
     Klub* klubovi = NULL;
-    int brojKlubova = 0;
+    int broj_klubova = 0;
 
-    if (!ucitaj_igrace("igraci.txt", &igraci, &brojIgraca)) {
-        printf("Neuspjelo ucitavanje igraca.\n");
+    if (!UcitajIgrace("igraci.txt", &igraci, &broj_igraca)) {
+        perror("Neuspjelo učitavanje igrača");
     }
 
-    if (!ucitaj_klubove("klubovi.txt", &klubovi, &brojKlubova)) {
-        printf("Neuspjelo ucitavanje klubova.\n");
+    if (!UcitajKlubove("klubovi.txt", &klubovi, &broj_klubova)) {
+        perror("Neuspjelo učitavanje klubova");
     }
 
-    int izabranaOpcija = 0;
+    int izabrana_opcija = 0;
 
     do {
-        izabranaOpcija = prikazi_izbornik();
+        izabrana_opcija = PrikaziIzbornik();
 
-        switch (izabranaOpcija) {
-        case ISPISI_IGRACE:
-            ispisi_igrace(igraci, brojIgraca);
-            break;
+        switch (izabrana_opcija) {
+            case ISPISI_IGRACE:
+                IspisiIgrace(igraci, broj_igraca);
+                break;
 
-        case DODAJ_IGRACA:
-            unos_igraca_menu(&igraci, &brojIgraca);
-            break;
+            case DODAJ_IGRACA:
+                UnosIgracaMenu(&igraci, &broj_igraca);
+                break;
 
-        case AZURIRAJ_IGRACA:
-            azuriraj_igraca_menu(igraci, brojIgraca);
-            break;
+            case AZURIRAJ_IGRACA:
+                AzurirajIgracaMenu(igraci, broj_igraca);
+                break;
 
-        case OBRISI_IGRACA:
-            obrisi_igraca_menu(&igraci, &brojIgraca);
-            break;
+            case OBRISI_IGRACA:
+                ObrisiIgracaMenu(&igraci, &broj_igraca);
+                break;
 
-        case ISPISI_KLUBOVE:
-            ispisi_klubove(klubovi, brojKlubova);
-            break;
+            case ISPISI_KLUBOVE:
+                IspisiKlubove(klubovi, broj_klubova);
+                break;
 
-        case DODAJ_KLUB:
-            unos_kluba_menu(&klubovi, &brojKlubova);
-            break;
+            case DODAJ_KLUB:
+                UnosKlubaMenu(&klubovi, &broj_klubova);
+                break;
 
-        case AZURIRAJ_KLUB:
-            azuriraj_klub_menu(klubovi, brojKlubova);
-            break;
+            case AZURIRAJ_KLUB:
+                AzurirajKlubMenu(klubovi, broj_klubova);
+                break;
 
-        case OBRISI_KLUB:
-            obrisi_klub_menu(&klubovi, &brojKlubova);
-            break;
+            case OBRISI_KLUB:
+                ObrisiKlubMenu(&klubovi, &broj_klubova);
+                break;
 
-        case SPREMI_PODATKE:
-            if (spremi_igrace("igraci.txt", igraci, brojIgraca) &&
-                spremi_klubove("klubovi.txt", klubovi, brojKlubova)) {
-                printf("Podaci su uspješno spremljeni.\n");
-            }
-            else {
-                printf("Greška pri spremanju podataka.\n");
-            }
-            break;
+            case SPREMI_PODATKE:
+                if (SpremiIgrace("igraci.txt", igraci, broj_igraca) &&
+                    SpremiKlubove("klubovi.txt", klubovi, broj_klubova)) {
+                    printf("Podaci su uspješno spremljeni.\n");
+                } else {
+                    perror("Greška pri spremanju podataka");
+                }
+                break;
 
-        case KRAJ:
-            printf("Izlaz iz programa.\nVidimo se!\n");
-            break;
+            case KRAJ:
+                printf("Izlaz iz programa.\nVidimo se!\n");
+                break;
 
-        default:
-            printf("Nepoznata opcija.\n");
-            break;
+            default:
+                fprintf(stderr, "Nepoznata opcija.\n");
+                break;
         }
-    } while (izabranaOpcija != KRAJ);
 
-    sigurnoOslobodiMemoriju((void**)&igraci);
-    sigurnoOslobodiMemoriju((void**)&klubovi);
+    } while (izabrana_opcija != KRAJ);
+
+    SigurnoOslobodiMemoriju((void**)&igraci);
+    SigurnoOslobodiMemoriju((void**)&klubovi);
 
     return 0;
 }
+
