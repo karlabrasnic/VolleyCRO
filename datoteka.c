@@ -6,7 +6,7 @@
 #include "datoteka.h"
 
 int ucitaj_igrace(const char* filename, Igrac** igraci, int* broj) {
-	FILE* f = fopen("C:\\Users\\Fujitsu\\source\\repos\\volleyCRO2\\volleyCRO2\\x64\\Debug\\igraci.txt", "r");
+	FILE* f = fopen(filename, "r");
 	if (!f) return 0;
 
 	*igraci = NULL;
@@ -30,7 +30,7 @@ int ucitaj_igrace(const char* filename, Igrac** igraci, int* broj) {
 }
 
 int spremi_igrace(const char* filename, Igrac* igraci, int broj) {
-	FILE* f = fopen("C:\\Users\\Fujitsu\\source\\repos\\volleyCRO2\\volleyCRO2\\x64\\Debug\\igraci.txt", "w");
+	FILE* f = fopen(filename, "w");
 	if (!f) return 0;
 	for (int i = 0; i < broj; i++) {
 		fprintf(f, "%d %s %s %d %s %d\n",
@@ -42,7 +42,7 @@ int spremi_igrace(const char* filename, Igrac* igraci, int broj) {
 }
 
 int ucitaj_klubove(const char* filename, Klub** klubovi, int* broj) {
-	FILE* f = fopen("C:\\Users\\Fujitsu\\source\\repos\\volleyCRO2\\volleyCRO2\\x64\\Debug\\klubovi.txt", "r");
+	FILE* f = fopen(filename, "r");
 	if (!f) return 0;
 
 	*klubovi = NULL;
@@ -66,7 +66,7 @@ int ucitaj_klubove(const char* filename, Klub** klubovi, int* broj) {
 }
 
 int spremi_klubove(const char* filename, Klub* klubovi, int broj) {
-	FILE* f = fopen("C:\\Users\\Fujitsu\\source\\repos\\volleyCRO2\\volleyCRO2\\x64\\Debug\\klubovi.txt", "w");
+	FILE* f = fopen(filename, "w");
 	if (!f) return 0;
 	for (int i = 0; i < broj; i++) {
 		fprintf(f, "%d %s %s %d %d %d\n",
