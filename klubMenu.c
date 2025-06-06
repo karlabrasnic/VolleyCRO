@@ -3,75 +3,131 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "klubMenu.h"
+#include "klub_menu.h"
 
-void unos_kluba_menu(Klub** klubovi, int* broj_klubova) {
-    if (!klubovi || !broj_klubova) return;
-
-    Klub novi;
-    printf("Unesite ID kluba: ");
-    scanf("%d", &novi.id);
-    printf("Unesite naziv kluba: ");
-    scanf("%49s", novi.naziv);
-    printf("Unesite grad kluba: ");
-    scanf("%49s", novi.grad);
-
-    if (!dodaj_klub(klubovi, broj_klubova, novi)) {
-        fprintf(stderr, "Neuspješno dodavanje kluba.\n");
+static int unos_id(void) {
+    int id;
+    printf("Unesite ID: ");
+    while (scanf("%d", &id) != 1) {
+        while (getchar() != '\n');
+        printf("Neispravan unos. Unesite cijeli broj: ");
     }
+    while (getchar() != '\n');
+    return id;
 }
 
-void azuriraj_klub_menu(Klub* klubovi, int broj_klubova) {
-    if (!klubovi || broj_klubova <= 0) return;
-
-    int id;
-    printf("Unesite ID kluba za ažuriranje: ");
-    scanf("%d", &id);
-
-    for (int i = 0; i < broj_klubova; i++) {
-        if (klubovi[i].id == id) {
-            printf("Unesite novi naziv kluba: ");
-            scanf("%49s", klubovi[i].naziv);
-            printf("Unesite novi grad kluba: ");
-            scanf("%49s", klubovi[i].grad);
-            printf("Klub ažuriran.\n");
-            return;
-        }
-    }
-    printf("Klub s ID %d nije pronađen.\n", id);
+static void unos_string(char* buffer, int max_len, const char* poruka) {
+    printf("%s", poruka);
+    fgets(buffer, max_len, stdin);
+    size_t len = strlen(buffer);
+    if (len > 0 && buffer[len-1] == '\n') buffer[len-1] = '\0';
 }
 
-void obrisi_klub_menu(Klub** klubovi, int* broj_klubova) {
-    if (!klubovi || !*klubovi || !broj_klubova || *broj_klubova <= 0) return;
+void prikazi_izbornik_klubova(void) {
+    printf("\n-- Izbornik za upravljanje klubovima --\n");
+    printf("1. Dodaj klub\n");
+    printf("2. Obrisi klub\n");
+    printf("3. Ažuriraj klub\n");
+    printf("4. Prikaži sve klubove\n");
+    printf("5. Povratak\n");
+    printf("Odaberite opciju: ");
+}
 
-    int id;
-    printf("Unesite ID kluba za brisanje: ");
-    scanf("%d", &id);
-
-    int indeks = -1;
-    for (int i = 0; i < *broj_klubova; i++) {
-        if ((*klubovi)[i].id == id) {
-            indeks = i;
-            break;
-        }
-    }
-
-    if (indeks == -1) {
-        printf("Klub s ID %d nije pronađen.\n", id);
+void prikazi_klubove(const Klub* klubovi, int broj) {
+    if (broj == 0) {
+        printf("Nema unesenih klubova.\n");
         return;
     }
-
-    for (int i = indeks; i < (*broj_klubova) - 1; i++) {
-        (*klubovi)[i] = (*klubovi)[i + 1];
-    }
-
-    Klub* tmp = realloc(*klubovi, ((*broj_klubova) - 1) * sizeof(Klub));
-    if (tmp || (*broj_klubova) - 1 == 0) {
-        *klubovi = tmp;
-        (*broj_klubova)--;
-        printf("Klub obrisan.\n");
-    } else {
-        fprintf(stderr, "Greška pri realokaciji memorije.\n");
+    printf("\n--- Popis klubova ---\n");
+    printf("ID\tNaziv\tGrad\tGodina osnivanja\n");
+    for (int i = 0; i < broj; i++) {
+        printf("%d\t%s\t%s\t%d\n",
+            klubovi[i].id,
+            klubovi[i].naziv,
+            klubovi[i].grad,
+            klubovi[i].godina_osnivanja);
     }
 }
+
+void upravljanje_klubovima(Klub** klubovi, int* broj) {
+    int running = 1;
+    while (running) {
+        prikazi_izbornik_klubova();
+        int izbor;
+        if (scanf("%d", &izbor) != 1) {
+            while (getchar() != '\n');
+            printf("Neispravan unos.\n");
+            continue;
+        }
+        while (getchar() != '\n');
+
+        switch (izbor) {
+            case 1: {
+                Klub novi;
+                novi.id = unos_id();
+
+                if (*broj > 0) {
+                    Klub* pronadjen = bsearch(&novi.id, *klubovi, *broj, sizeof(Klub), usporedi_klub_po_id);
+                    if (pronadjen) {
+                        printf("Klub s tim ID-om već postoji.\n");
+                        break;
+                    }
+                }
+
+                unos_string(novi.naziv, MAX_NAZIV, "Unesite naziv kluba: ");
+                unos_string(novi.grad, MAX_GRAD, "Unesite grad: ");
+
+                printf("Unesite godinu osnivanja: ");
+                while (scanf("%d", &novi.godina_osnivanja) != 1) {
+                    while (getchar() != '\n');
+                    printf("Neispravan unos. Unesite godinu osnivanja: ");
+                }
+                while (getchar() != '\n');
+
+                if (dodaj_klub(klubovi, broj, novi))
+                    printf("Klub uspješno dodan.\n");
+                else
+                    printf("Greška pri dodavanju kluba.\n");
+
+                break;
+            }
+            case 2: {
+                int id = unos_id();
+                if (obrisi_klub(*klubovi, broj, id))
+                    printf("Klub uspješno obrisan.\n");
+                else
+                    printf("Klub s tim ID-om nije pronađen.\n");
+                break;
+            }
+            case 3: {
+                int id = unos_id();
+                Klub novi;
+                unos_string(novi.naziv, MAX_NAZIV, "Unesite novi naziv kluba: ");
+                unos_string(novi.grad, MAX_GRAD, "Unesite novi grad: ");
+
+                printf("Unesite novu godinu osnivanja: ");
+                while (scanf("%d", &novi.godina_osnivanja) != 1) {
+                    while (getchar() != '\n');
+                    printf("Neispravan unos. Unesite godinu osnivanja: ");
+                }
+                while (getchar() != '\n');
+
+                if (azuriraj_klub(*klubovi, *broj, id, novi))
+                    printf("Klub uspješno ažuriran.\n");
+                else
+                    printf("Klub s tim ID-om nije pronađen.\n");
+                break;
+            }
+            case 4:
+                prikazi_klubove(*klubovi, *broj);
+                break;
+            case 5:
+                running = 0;
+                break;
+            default:
+                printf("Nepoznata opcija.\n");
+        }
+    }
+}
+
 
