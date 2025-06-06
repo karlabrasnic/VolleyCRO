@@ -1,10 +1,10 @@
-#ifndef KLUBMENU_H
-#define KLUBMENU_H
+#ifndef KLUB_MENU_H
+#define KLUB_MENU_H
 
 #include "klub.h"
 
-void unos_kluba_menu(Klub** klubovi, int* broj_klubova);
-void azuriraj_klub_menu(Klub* klubovi, int broj_klubova);
-void obrisi_klub_menu(Klub** klubovi, int* broj_klubova);
+void prikazi_izbornik_klubova(void);
+void upravljanje_klubovima(Klub** klubovi, int* broj);
 
 #endif
+
