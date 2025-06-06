@@ -1,8 +1,7 @@
 #ifndef IZBORNIK_H
 #define IZBORNIK_H
 
-typedef enum {
-    KRAJ = 0,
+enum Opcije {
     ISPISI_IGRACE = 1,
     DODAJ_IGRACA,
     AZURIRAJ_IGRACA,
@@ -11,9 +10,11 @@ typedef enum {
     DODAJ_KLUB,
     AZURIRAJ_KLUB,
     OBRISI_KLUB,
-    SPREMI_PODATKE
-} Opcija;
+    SPREMI_PODATKE,
+    KRAJ
+};
 
 int prikazi_izbornik(void);
 
 #endif
+
