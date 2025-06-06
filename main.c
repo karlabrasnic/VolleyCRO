@@ -4,8 +4,8 @@
 #include "klub.h"
 #include "datoteka.h"
 #include "izbornik.h"
-#include "igrac_menu.h"
-#include "klub_menu.h"
+#include "igracMenu.h"
+#include "klubMenu.h"
 
 #define DAT_IGRACI "igraci.txt"
 #define DAT_KLUBOVI "klubovi.txt"
