@@ -2,110 +2,87 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "igrac_menu.h"
-#include "igrac.h"
+#include <string.h>
+#include "igracMenu.h"
 
 void unos_igraca_menu(Igrac** igraci, int* broj_igraca) {
-    Igrac novi_igrac;
+    if (!igraci || !broj_igraca) return;
 
-    printf("Unesite ID igraca: ");
-    if (scanf("%d", &novi_igrac.id) != 1) {
-        printf("Neispravan unos ID-a.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
+    Igrac novi;
+    printf("Unesite ID: ");
+    scanf("%d", &novi.id);
     printf("Unesite ime: ");
-    if (scanf("%49s", novi_igrac.ime) != 1) {
-        printf("Neispravan unos imena.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
+    scanf("%49s", novi.ime);
     printf("Unesite prezime: ");
-    if (scanf("%49s", novi_igrac.prezime) != 1) {
-        printf("Neispravan unos prezimena.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    printf("Unesite godinu rodenja: ");
-    if (scanf("%d", &novi_igrac.godina_rodenja) != 1) {
-        printf("Neispravan unos godine rodenja.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
+    scanf("%49s", novi.prezime);
+    printf("Unesite godinu rođenja: ");
+    scanf("%d", &novi.godina_rodenja);
     printf("Unesite poziciju: ");
-    if (scanf("%19s", novi_igrac.pozicija) != 1) {
-        printf("Neispravan unos pozicije.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
+    scanf("%19s", novi.pozicija);
     printf("Unesite broj kluba: ");
-    if (scanf("%d", &novi_igrac.broj_kluba) != 1) {
-        printf("Neispravan unos broja kluba.\n");
-        while (getchar() != '\n');
-        return;
-    }
+    scanf("%d", &novi.broj_kluba);
 
-    if (dodaj_igraca(igraci, broj_igraca, novi_igrac)) {
-        printf("Igrac uspesno dodat.\n");
-    } else {
-        printf("Greska pri dodavanju igraca.\n");
+    if (!dodaj_igraca(igraci, broj_igraca, novi)) {
+        fprintf(stderr, "Neuspješno dodavanje igrača.\n");
     }
 }
 
 void azuriraj_igraca_menu(Igrac* igraci, int broj_igraca) {
+    if (!igraci || broj_igraca <= 0) return;
+
     int id;
-    printf("Unesite ID igraca za azuriranje: ");
-    if (scanf("%d", &id) != 1) {
-        printf("Neispravan unos ID-a.\n");
-        while (getchar() != '\n');
-        return;
+    printf("Unesite ID igrača za ažuriranje: ");
+    scanf("%d", &id);
+
+    for (int i = 0; i < broj_igraca; i++) {
+        if (igraci[i].id == id) {
+            printf("Unesite novo ime: ");
+            scanf("%49s", igraci[i].ime);
+            printf("Unesite novo prezime: ");
+            scanf("%49s", igraci[i].prezime);
+            printf("Unesite novu godinu rođenja: ");
+            scanf("%d", &igraci[i].godina_rodenja);
+            printf("Unesite novu poziciju: ");
+            scanf("%19s", igraci[i].pozicija);
+            printf("Unesite novi broj kluba: ");
+            scanf("%d", &igraci[i].broj_kluba);
+            printf("Igrač ažuriran.\n");
+            return;
+        }
     }
-
-    int idx = pronadji_igraca(igraci, broj_igraca, id);
-    if (idx == -1) {
-        printf("Igrac sa zadatim ID-em ne postoji.\n");
-        return;
-    }
-
-    Igrac novi_igrac;
-
-    printf("Unesite novo ime: ");
-    if (scanf("%49s", novi_igrac.ime) != 1) { printf("Neispravan unos.\n"); while (getchar() != '\n'); return; }
-    printf("Unesite novo prezime: ");
-    if (scanf("%49s", novi_igrac.prezime) != 1) { printf("Neispravan unos.\n"); while (getchar() != '\n'); return; }
-    printf("Unesite novu godinu rodenja: ");
-    if (scanf("%d", &novi_igrac.godina_rodenja) != 1) { printf("Neispravan unos.\n"); while (getchar() != '\n'); return; }
-    printf("Unesite novu poziciju: ");
-    if (scanf("%19s", novi_igrac.pozicija) != 1) { printf("Neispravan unos.\n"); while (getchar() != '\n'); return; }
-    printf("Unesite novi broj kluba: ");
-    if (scanf("%d", &novi_igrac.broj_kluba) != 1) { printf("Neispravan unos.\n"); while (getchar() != '\n'); return; }
-
-    novi_igrac.id = id;
-
-    if (azuriraj_igraca(igraci, broj_igraca, id, novi_igrac)) {
-        printf("Igrac uspesno azuriran.\n");
-    } else {
-        printf("Greska pri azuriranju igraca.\n");
-    }
+    printf("Igrač s ID %d nije pronađen.\n", id);
 }
 
 void obrisi_igraca_menu(Igrac** igraci, int* broj_igraca) {
+    if (!igraci || !*igraci || !broj_igraca || *broj_igraca <= 0) return;
+
     int id;
-    printf("Unesite ID igraca za brisanje: ");
-    if (scanf("%d", &id) != 1) {
-        printf("Neispravan unos ID-a.\n");
-        while (getchar() != '\n');
+    printf("Unesite ID igrača za brisanje: ");
+    scanf("%d", &id);
+
+    int indeks = -1;
+    for (int i = 0; i < *broj_igraca; i++) {
+        if ((*igraci)[i].id == id) {
+            indeks = i;
+            break;
+        }
+    }
+
+    if (indeks == -1) {
+        printf("Igrač s ID %d nije pronađen.\n", id);
         return;
     }
 
-    if (obrisi_igraca(igraci, broj_igraca, id)) {
-        printf("Igrac je obrisan.\n");
+    for (int i = indeks; i < (*broj_igraca) - 1; i++) {
+        (*igraci)[i] = (*igraci)[i + 1];
+    }
+
+    Igrac* tmp = realloc(*igraci, ((*broj_igraca) - 1) * sizeof(Igrac));
+    if (tmp || (*broj_igraca) - 1 == 0) {
+        *igraci = tmp;
+        (*broj_igraca)--;
+        printf("Igrač obrisan.\n");
     } else {
-        printf("Igrac nije pronadjen.\n");
+        fprintf(stderr, "Greška pri realokaciji memorije.\n");
     }
 }
