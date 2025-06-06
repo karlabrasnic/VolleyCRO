@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-
 #include "igracMenu.h"
 #include "klubMenu.h"
 #include "datoteka.h"
