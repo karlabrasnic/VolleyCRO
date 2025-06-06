@@ -21,8 +21,9 @@ int prikazi_izbornik(void) {
     if (scanf("%d", &izbor) != 1) {
         printf("Neispravan unos!\n");
         izbor = -1;
-        while (getchar() != '\n');  
+        while (getchar() != '\n');  // čisti buffer
     }
 
     return izbor;
 }
+
