@@ -1,99 +1,67 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "igrac.h"
-#include "igracMenu.h"
 #include "klub.h"
-#include "klubMenu.h"
 #include "datoteka.h"
 #include "izbornik.h"
+#include "igrac_menu.h"
+#include "klub_menu.h"
 
-static inline void sigurno_oslobodi_memoriju(void** ptr) {
-    if (ptr != NULL && *ptr != NULL) {
-        free(*ptr);
-        *ptr = NULL;
-    }
-}
+#define DAT_IGRACI "igraci.txt"
+#define DAT_KLUBOVI "klubovi.txt"
 
 int main(void) {
-    printf("\n===========================================\n");
-    printf("   --- Dobrodošli u VolleyCRO aplikaciju! ---\n");
-    printf("===========================================\n\n");
-
     Igrac* igraci = NULL;
     int broj_igraca = 0;
 
     Klub* klubovi = NULL;
     int broj_klubova = 0;
 
-    if (!ucitaj_igrace("igraci.txt", &igraci, &broj_igraca)) {
-        perror("Neuspjelo učitavanje igrača");
-    }
+    init_igraci(&igraci, &broj_igraca);
+    init_klubove(&klubovi, &broj_klubova);
 
-    if (!ucitaj_klubove("klubovi.txt", &klubovi, &broj_klubova)) {
-        perror("Neuspjelo učitavanje klubova");
-    }
-
-    int opcija;
-    do {
-        opcija = prikazi_izbornik();
+    int running = 1;
+    while (running) {
+        prikazi_glavni_izbornik();
+        int opcija = odaberi_opciju(5);
 
         switch (opcija) {
-            case ISPISI_IGRACE:
-                ispisi_igrace(igraci, broj_igraca);
+            case 1:
+                upravljanje_igracima(&igraci, &broj_igraca, klubovi, broj_klubova);
                 break;
-
-            case DODAJ_IGRACA:
-                unos_igraca_menu(&igraci, &broj_igraca);
+            case 2:
+                upravljanje_klubovima(&klubovi, &broj_klubova);
                 break;
-
-            case AZURIRAJ_IGRACA:
-                azuriraj_igraca_menu(igraci, broj_igraca);
-                break;
-
-            case OBRISI_IGRACA:
-                obrisi_igraca_menu(&igraci, &broj_igraca);
-                break;
-
-            case ISPISI_KLUBOVE:
-                ispisi_klubove(klubovi, broj_klubova);
-                break;
-
-            case DODAJ_KLUB:
-                unos_kluba_menu(&klubovi, &broj_klubova);
-                break;
-
-            case AZURIRAJ_KLUB:
-                azuriraj_klub_menu(klubovi, broj_klubova);
-                break;
-
-            case OBRISI_KLUB:
-                obrisi_klub_menu(&klubovi, &broj_klubova);
-                break;
-
-            case SPREMI_PODATKE:
-                if (spremi_igrace("igraci.txt", igraci, broj_igraca) &&
-                    spremi_klubove("klubovi.txt", klubovi, broj_klubova)) {
-                    printf("Podaci su uspješno spremljeni.\n");
+            case 3:
+                if (spremi_igrace(DAT_IGRACI, igraci, broj_igraca) &&
+                    spremi_klubove(DAT_KLUBOVI, klubovi, broj_klubova)) {
+                    printf("Podaci uspješno spremljeni.\n");
                 } else {
-                    perror("Greška pri spremanju podataka");
+                    printf("Greška pri spremanju podataka.\n");
                 }
                 break;
-
-            case KRAJ:
-                printf("Izlaz iz programa. Vidimo se!\n");
+            case 4:
+                if (ucitaj_igrace(DAT_IGRACI, &igraci, &broj_igraca) &&
+                    ucitaj_klubove(DAT_KLUBOVI, &klubovi, &broj_klubova)) {
+                    printf("Podaci uspješno učitani.\n");
+                } else {
+                    printf("Greška pri učitavanju podataka.\n");
+                }
                 break;
-
+            case 5:
+                running = 0;
+                break;
             default:
-                fprintf(stderr, "Nepoznata opcija.\n");
-                break;
+                printf("Nepoznata opcija.\n");
         }
-    } while (opcija != KRAJ);
+    }
 
-    sigurno_oslobodi_memoriju((void**)&igraci);
-    sigurno_oslobodi_memoriju((void**)&klubovi);
+    free(igraci);
+    igraci = NULL;
 
+    free(klubovi);
+    klubovi = NULL;
+
+    printf("Izlaz iz programa.\n");
     return 0;
 }
-
