@@ -17,7 +17,7 @@ int dodaj_igraca(Igrac** igraci, int* broj, Igrac novi) {
     (*igraci)[*broj] = novi;
     (*broj)++;
 
-    qsort(*igraci, *broj, sizeof(Igrac), usporedi_igrace);
+    qsort(*igraci, *broj, sizeof(Igrac));
     return 1;
 }
 
