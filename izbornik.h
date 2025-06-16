@@ -1,8 +1,22 @@
 #ifndef IZBORNIK_H
 #define IZBORNIK_H
 
-void prikazi_glavni_izbornik(void);
-int odaberi_opciju(int max_opcija);
 
-#endif
+typedef enum {
+    KRAJ = 0,
+    ISPISI_IGRACE = 1,
+    DODAJ_IGRACA,
+    AZURIRAJ_IGRACA,
+    OBRISI_IGRACA,
+    ISPISI_KLUBOVE,
+    DODAJ_KLUB,
+    AZURIRAJ_KLUB,
+    OBRISI_KLUB,
+    SPREMI_PODATKE
+} Opcija;
+
+
+int prikazi_izbornik(void);
+
+#endif // IZBORNIK_H
 
