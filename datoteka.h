@@ -4,10 +4,11 @@
 #include "igrac.h"
 #include "klub.h"
 
-int ucitaj_igrace(const char* filename, Igrac** igraci, int* broj);
-int spremi_igrace(const char* filename, const Igrac* igraci, int broj);
-int ucitaj_klubove(const char* filename, Klub** klubovi, int* broj);
-int spremi_klubove(const char* filename, const Klub* klubovi, int broj);
-int kopiraj_datoteku(const char* source, const char* dest);
+// Funkcije za rad s datotekama igrača i klubova
+int ucitaj_igrace(const char* ime_datoteke, Igrac** igraci, int* broj_igraca);
+int spremi_igrace(const char* ime_datoteke, const Igrac* igraci, int broj_igraca);
+
+int ucitaj_klubove(const char* ime_datoteke, Klub** klubovi, int* broj_klubova);
+int spremi_klubove(const char* ime_datoteke, const Klub* klubovi, int broj_klubova);
 
 #endif
