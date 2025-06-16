@@ -4,59 +4,83 @@
 #include <string.h>
 #include "klub.h"
 
-void init_klubove(Klub** klubovi, int* broj) {
-    *klubovi = NULL;
-    *broj = 0;
-}
+int dodaj_klub(Klub** klubovi, int* broj_klubova, Klub novi) {
+    if (klubovi == NULL || broj_klubova == NULL)
+        return 0;
 
-int dodaj_klub(Klub** klubovi, int* broj, Klub novi) {
-    Klub* temp = realloc(*klubovi, (*broj + 1) * sizeof(Klub));
-    if (temp == NULL) return 0;
+    Klub* temp = realloc(*klubovi, (*broj_klubova + 1) * sizeof(Klub));
+    if (temp == NULL)
+        return 0;
 
     *klubovi = temp;
-    (*klubovi)[*broj] = novi;
-    (*broj)++;
+    (*klubovi)[*broj_klubova] = novi;
+    (*broj_klubova)++;
 
-    qsort(*klubovi, *broj, sizeof(Klub), usporedi_klubove);
     return 1;
 }
 
-int obrisi_klub(Klub* klubovi, int* broj, int id) {
-    int i;
-    for (i = 0; i < *broj; i++) {
-        if (klubovi[i].id == id) {
-            break;
-        }
-    }
-    if (i == *broj) return 0;
+int pronadji_klub(const Klub* klubovi, int broj, int id) {
+    if (klubovi == NULL || broj <= 0)
+        return -1;
 
-    for (int j = i; j < *broj - 1; j++) {
-        klubovi[j] = klubovi[j + 1];
-    }
-    (*broj)--;
-    return 1;
-}
-
-int azuriraj_klub(Klub* klubovi, int broj, int id, Klub novi) {
     for (int i = 0; i < broj; i++) {
-        if (klubovi[i].id == id) {
-            novi.id = id;
-            klubovi[i] = novi;
-            return 1;
-        }
+        if (klubovi[i].id == id)
+            return i;
     }
-    return 0;
+    return -1;
 }
 
-int usporedi_klubove(const void* a, const void* b) {
-    const Klub* ka = (const Klub*)a;
-    const Klub* kb = (const Klub*)b;
-    return ka->id - kb->id;
+int azuriraj_klub(Klub* klubovi, int broj, int id, Klub novi_podaci) {
+    int idx = pronadji_klub(klubovi, broj, id);
+    if (idx == -1)
+        return 0;
+
+    klubovi[idx] = novi_podaci;
+    return 1;
 }
 
-int usporedi_klub_po_id(const void* key, const void* elem) {
-    int id = *(const int*)key;
-    const Klub* klub = (const Klub*)elem;
-    return id - klub->id;
+int obrisi_klub(Klub** klubovi, int* broj, int id) {
+    if (klubovi == NULL || *klubovi == NULL || broj == NULL || *broj <= 0)
+        return 0;
+
+    int idx = pronadji_klub(*klubovi, *broj, id);
+    if (idx == -1)
+        return 0;
+
+    for (int i = idx; i < *broj - 1; i++) {
+        (*klubovi)[i] = (*klubovi)[i + 1];
+    }
+
+    (*broj)--;
+
+    if (*broj > 0) {
+        Klub* temp = realloc(*klubovi, (*broj) * sizeof(Klub));
+        if (temp == NULL)
+            return 0;
+
+        *klubovi = temp;
+    }
+    else {
+        free(*klubovi);
+        *klubovi = NULL;
+    }
+
+    return 1;
 }
 
+void ispisi_klubove(const Klub* klubovi, int broj) {
+    if (klubovi == NULL || broj <= 0) {
+        printf("Nema klubova za ispis.\n");
+        return;
+    }
+
+    for (int i = 0; i < broj; i++) {
+        printf("ID: %d, Naziv: %s, Grad: %s, Godine osnivanja: %d, Pobjede: %d, Porazi: %d\n",
+            klubovi[i].id,
+            klubovi[i].naziv,
+            klubovi[i].grad,
+            klubovi[i].godine_osnivanja,
+            klubovi[i].broj_pobjeda,
+            klubovi[i].broj_poraza);
+    }
+}
