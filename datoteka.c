@@ -5,7 +5,6 @@
 #include <errno.h>
 #include "datoteka.h"
 
-
 int kopiraj_datoteku(const char* src, const char* dest) {
     FILE* fsrc = fopen(src, "rb");
     if (!fsrc) {
