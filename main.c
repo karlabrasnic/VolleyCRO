@@ -1,104 +1,111 @@
 #define _CRT_SECURE_NO_WARNINGS
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>         
+#include <string.h>
+#include "igrac.h"
 #include "igracMenu.h"
-#include "klubMenu.h"
 #include "datoteka.h"
 #include "izbornik.h"
 
-
-static inline void sigurnoOslobodiMemoriju(void** ptr) {
-    if (ptr != NULL && *ptr != NULL) {
-        free(*ptr);
-        *ptr = NULL;
-    }
-}
-
-
-static int ucitajPodatke(const char* filename, void** podaci, int* broj, int (*ucitaj)(const char*, void**, int*)) {
-    if (!ucitaj(filename, podaci, broj)) {
-        fprintf(stderr, "Greska pri ucitavanju datoteke %s: %s\n", filename, strerror(errno));
-        return 0;
-    }
-    return 1;
-}
+static void sortiraj_po_imenu(Igrac* igraci, int broj_igraca);
+static void prikazi_igraca_po_imenu(const Igrac* igraci, int broj_igraca, const char* ime);
 
 int main(void) {
-    printf("\n===========================================\n");
-    printf("   --- Dobrodosli u VolleyCRO aplikaciju! ---\n");
-    printf("===========================================\n\n");
-
     Igrac* igraci = NULL;
-    int brojIgraca = 0;
+    int broj_igraca = 0;
 
-    Klub* klubovi = NULL;
-    int brojKlubova = 0;
+    const char* imeDatoteke = "igraci.txt";
 
-    ucitajPodatke("igraci.txt", (void**)&igraci, &brojIgraca, (int(*)(const char*, void**, int*))ucitaj_igrace);
-    ucitajPodatke("klubovi.txt", (void**)&klubovi, &brojKlubova, (int(*)(const char*, void**, int*))ucitaj_klubove);
+    if (!ucitaj_igrace(imeDatoteke, &igraci, &broj_igraca)) {
+        printf("Greska pri ucitavanju podataka ili prazna datoteka.\n");
+    }
 
-    int izabranaOpcija = 0;
-
+    int izbor;
     do {
-        izabranaOpcija = prikazi_izbornik();
+        izbor = prikazi_izbornik();
 
-        switch (izabranaOpcija) {
-        case ISPISI_IGRACE:
-            ispisi_igrace(igraci, brojIgraca);
+        switch (izbor) {
+        case 1:
+            ispisi_igrace_menu(igraci, broj_igraca);
             break;
-
-        case DODAJ_IGRACA:
-            unos_igraca_menu(&igraci, &brojIgraca);
+        case 2:
+            unos_igraca_menu(&igraci, &broj_igraca);
             break;
-
-        case AZURIRAJ_IGRACA:
-            azuriraj_igraca_menu(igraci, brojIgraca);
+        case 3:
+            azuriraj_igraca_menu(igraci, broj_igraca);
             break;
-
-        case OBRISI_IGRACA:
-            obrisi_igraca_menu(&igraci, &brojIgraca);
+        case 4:
+            obrisi_igraca_menu(&igraci, &broj_igraca);
             break;
-
-        case ISPISI_KLUBOVE:
-            ispisi_klubove(klubovi, brojKlubova);
+        case 5:
+            if (spremi_igrace(imeDatoteke, igraci, broj_igraca))
+                printf("Podaci uspjesno spremljeni.\n");
+            else
+                printf("Greska pri spremanju podataka.\n");
             break;
-
-        case DODAJ_KLUB:
-            unos_kluba_menu(&klubovi, &brojKlubova);
+        case 6:
+            sortiraj_po_imenu(igraci, broj_igraca);
             break;
-
-        case AZURIRAJ_KLUB:
-            azuriraj_klub_menu(klubovi, brojKlubova);
-            break;
-
-        case OBRISI_KLUB:
-            obrisi_klub_menu(&klubovi, &brojKlubova);
-            break;
-
-        case SPREMI_PODATKE:
-            if (spremi_igrace("igraci.txt", igraci, brojIgraca) &&
-                spremi_klubove("klubovi.txt", klubovi, brojKlubova)) {
-                printf("Podaci su uspjesno spremljeni.\n");
+        case 7: {
+            char trazenoIme[MAX_IME];
+            printf("Unesite ime za pretragu: ");
+            if (fgets(trazenoIme, sizeof(trazenoIme), stdin) != NULL) {
+                trazenoIme[strcspn(trazenoIme, "\n")] = '\0';
+                prikazi_igraca_po_imenu(igraci, broj_igraca, trazenoIme);
             }
             else {
-                perror("Greska pri spremanju podataka");
+                printf("Greska pri unosu imena.\n");
             }
             break;
-
-        case KRAJ:
-            printf("Izlaz iz programa.\nVidimo se!\n");
-            break;
-
-        default:
-            printf("Nepoznata opcija.\n");
+        }
+        case 8: {
+            if (kopiraj_datoteku(imeDatoteke, "backup_igraci.txt"))
+                printf("Datoteka uspjesno kopirana.\n");
+            else
+                printf("Greska pri kopiranju datoteke.\n");
             break;
         }
-    } while (izabranaOpcija != KRAJ);
+        case 9:
+            if (obrisi_datoteku("backup_igraci.txt"))
+                printf("Datoteka backup_igraci.txt uspjesno obrisana.\n");
+            else
+                printf("Greska pri brisanju datoteke.\n");
+            break;
+        case 10:
+            if (preimenuj_datoteku("backup_igraci.txt", "igraci_backup.txt"))
+                printf("Datoteka uspjesno preimenovana.\n");
+            else
+                printf("Greska pri preimenovanju datoteke.\n");
+            break;
+        case 0:
+            printf("Izlaz iz programa.\n");
+            break;
+        default:
+            printf("Nepoznata opcija.\n");
+        }
 
-    sigurnoOslobodiMemoriju((void**)&igraci);
-    sigurnoOslobodiMemoriju((void**)&klubovi);
+    } while (izbor != 0);
 
+    free(igraci);
     return 0;
+}
+
+static void sortiraj_po_imenu(Igrac* igraci, int broj_igraca) {
+    qsort(igraci, broj_igraca, sizeof(Igrac), usporedi_ime);
+    printf("Igraci su sortirani po imenu.\n");
+}
+
+static void prikazi_igraca_po_imenu(const Igrac* igraci, int broj_igraca, const char* ime) {
+    Igrac kljuc;
+    strncpy(kljuc.ime, ime, sizeof(kljuc.ime));
+    kljuc.ime[sizeof(kljuc.ime) - 1] = '\0';
+
+    Igrac* pronadjen = (Igrac*)bsearch(&kljuc, igraci, broj_igraca, sizeof(Igrac), usporedi_ime);
+    if (pronadjen) {
+        printf("Pronaden igrac: %s %s, klub: %s, godine: %d, pozicija: %s\n",
+            pronadjen->ime, pronadjen->prezime, pronadjen->klub, pronadjen->godine, pronadjen->pozicija);
+    }
+    else {
+        printf("Igrac s imenom '%s' nije pronaden.\n", ime);
+    }
 }
