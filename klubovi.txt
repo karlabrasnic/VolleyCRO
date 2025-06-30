@@ -1,8 +1,1 @@
-1|HAOK Mladost|Zagreb|1945|18|2
-2|Ribola Kaštela|Kaštela|1997|15|5
-3|MOK Mursa|Osijek|2003|13|7
-4|OK Kitro Varaždin|Varaždin|1985|10|10
-5|ZOK Marina Kaštela|Kaštela|2006|19|1
-6|OK Dinamo|Zagreb|2015|16|4
-7|HAOK Rijeka|Rijeka|1947|11|9
-8|ŽOK Osijek|Osijek|1950|12|8
+
