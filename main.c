@@ -14,6 +14,8 @@ int main(void) {
     Igrac* igraci = NULL;
     int broj_igraca = 0;
 
+
+
     const char* imeDatoteke = "igraci.txt";
 
     if (!ucitaj_igrace(imeDatoteke, &igraci, &broj_igraca)) {
