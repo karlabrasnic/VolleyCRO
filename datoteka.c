@@ -21,18 +21,18 @@ int ucitaj_igrace(const char* ime_datoteke, Igrac** igraci, int* broj_igraca) {
         return 0;
     }
 
-    while (fscanf(f, "%d %49s %49s %49s %d %29s",
-        &privremeni[broj].id,
+    while (fscanf(f, "%49s %49s %49s %d %29s",
         privremeni[broj].ime,
         privremeni[broj].prezime,
         privremeni[broj].klub,
         &privremeni[broj].godine,
-        privremeni[broj].pozicija) == 6) {
+        privremeni[broj].pozicija) == 5) {
 
+        privremeni[broj].id = broj + 1;
         broj++;
         if (broj >= kapacitet) {
             kapacitet *= 2;
-            Igrac* temp = realloc(privremeni, kapacitet * sizeof(Igrac));
+            Igrac* temp = (Igrac*)realloc(privremeni, kapacitet * sizeof(Igrac));
             if (!temp) {
                 perror("Nema memorije za povecanje");
                 free(privremeni);
