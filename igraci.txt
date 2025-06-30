@@ -1,10 +1,8 @@
-Ime: Marko, Prezime: Horvat, Spol: M, Klub: Mladost Zagreb
-Ime: Ivan, Prezime: Kovač, Spol: M, Klub: Ribola Kaštela
-Ime: Luka, Prezime: Babić, Spol: M, Klub: Zadar
-Ime: Petar, Prezime: Marić, Spol: M, Klub: Mursa Osijek
-Ime: Nikola, Prezime: Radić, Spol: M, Klub: Kitro Varaždin
-Ime: Ana, Prezime: Petrović, Spol: Ž, Klub: Marina Kaštela
-Ime: Ivana, Prezime: Jurić, Spol: Ž, Klub: HAOK Mladost
-Ime: Martina, Prezime: Knežević, Spol: Ž, Klub: Osijek
-Ime: Lucija, Prezime: Novak, Spol: Ž, Klub: Rijeka
-Ime: Elena, Prezime: Burić, Spol: Ž, Klub: Dinamo Zagreb
+Tonka,Bosnjak,Mladost,19,korektor
+Lucija,Kovac,Zadar,20,primac
+Ana,Petrovic,Osijek,21,srednjak
+Marija,Ilic,Rijeka,22,libero
+Petra,Horvat,Split,18,dizac
+Iva,Novak,Varazdin,19,primac
+Ema,Peric,Kastela,20,srednjak
+Lana,Jurcic,Sibenik,21,libero
